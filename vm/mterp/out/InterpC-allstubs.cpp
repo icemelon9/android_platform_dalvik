@@ -410,6 +410,10 @@ static inline void putDoubleToArrayTaint(u4* ptr, int idx, double dval)
 /* Object Taint interface */
 # define GET_ARRAY_TAINT(_arr)		      ((_arr)->taint.tag)
 # define SET_ARRAY_TAINT(_arr, _val)	      ((_arr)->taint.tag = (u4)(_val))
+/* add by haichen 
+ * set array taint index */
+# define GET_ARRAY_TAINT_INDEX(_arr)		((_arr)->index)
+# define SET_ARRAY_TAINT_INDEX(_arr, _val)	((_arr)->index = (u4)(_val))
 
 /* Return value taint (assumes rtaint variable is in scope */
 # define GET_RETURN_TAINT()		      (rtaint.tag)
@@ -1246,9 +1250,13 @@ GOTO_TARGET_DECL(exceptionThrown);
         ((_type*)(void*)arrayObj->contents)[GET_REGISTER(vsrc2)] =          \
             GET_REGISTER##_regsize(vdst);                                   \
 /* ifdef WITH_TAINT_TRACKING */						    \
-	SET_ARRAY_TAINT(arrayObj,                                           \
+/*	SET_ARRAY_TAINT(arrayObj,                                           \
 		(GET_ARRAY_TAINT(arrayObj) |                                \
-		 GET_REGISTER_TAINT##_regsize(vdst)) );                     \
+		 GET_REGISTER_TAINT##_regsize(vdst)) );   */                \
+	SET_ARRAY_TAINT(arrayObj,										\
+		GET_REGISTER_TAINT##_regsize(vdst));						\
+/* add by haichen */												\
+	SET_ARRAY_TAINT_INDEX(arrayObj, vsrc2);							\
 /* endif */								    \
     }                                                                       \
     FINISH(2);
@@ -2439,9 +2447,12 @@ HANDLE_OPCODE(OP_APUT_OBJECT /*vAA, vBB, vCC*/)
                                  GET_REGISTER(vsrc2),
                                  (Object *)GET_REGISTER(vdst));
 /* ifdef WITH_TAINT_TRACKING */
-	SET_ARRAY_TAINT(arrayObj,
+	/*SET_ARRAY_TAINT(arrayObj,
 		(GET_ARRAY_TAINT(arrayObj) |
-		 GET_REGISTER_TAINT(vdst)) );
+		 GET_REGISTER_TAINT(vdst)) );*/
+	SET_ARRAY_TAINT(arrayObj,
+		GET_REGISTER_TAINT(vdst) );
+	SET_ARRAY_TAINT_INDEX(arrayObj, vsrc2);
 /* endif */
     }
     FINISH(2);

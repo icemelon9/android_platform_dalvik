@@ -9222,12 +9222,15 @@ cmp_long_taint_prop:
 
 .LOP_APUT_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
+	mov		r10, r1						@ r10<- vCC (str vCC), add by haichen
     GET_VREG(r1, r2)                    @ r1<- vBB (array object)
-    ldr     r2, [r1, #offArrayObject_taint]
+//    ldr     r2, [r1, #offArrayObject_taint]
     SET_TAINT_FP(r3)
     GET_VREG_TAINT(r3, r9, r3)
-    orr     r2, r2, r3                  @ r2<- r2 | r3
-    str     r2, [r1, #offArrayObject_taint]
+//    orr     r2, r2, r3                  @ r2<- r2 | r3
+//    str     r2, [r1, #offArrayObject_taint]
+	str		r3, [r1, #offArrayObject_taint]
+	str		r10, [r1, #offArrayObject_taint_index]	@ store the last index, add by haichen
     bx      lr
 
 /* continuation for OP_APUT_WIDE */
@@ -9236,11 +9239,12 @@ cmp_long_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
 // begin WITH_TAINT_TRACKING
 //    ldmia   r9, {r2-r3}                 @ r2/r3<- vAA/vAA+1
+	str		r1, [r10, #offArrayObject_taint_index]	@ store the last index, add by haichen
     ldr     r2, [r9, #0]
     ldr     r3, [r9, #8]
     ldr     r1, [r9, #4]                      @ r1<- array taint
-    ldr     r9, [r10, #offArrayObject_taint]
-    orr     r1, r1, r9                        @ r1<- r1 | r9
+//    ldr     r9, [r10, #offArrayObject_taint]
+//    orr     r1, r1, r9                        @ r1<- r1 | r9
     str     r1, [r10, #offArrayObject_taint]
 // end WITH_TAINT_TRACKING
     GET_INST_OPCODE(ip)                 @ extract opcode from rINST
@@ -9304,48 +9308,60 @@ cmp_long_taint_prop:
 
 .LOP_APUT_BOOLEAN_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
+	mov		r10, r1						@ r10<- vCC (str vCC), add by haichen
     GET_VREG(r1, r2)                    @ r1<- vBB (array object)
-    ldr     r2, [r1, #offArrayObject_taint]
+//    ldr     r2, [r1, #offArrayObject_taint]
     SET_TAINT_FP(r3)
     GET_VREG_TAINT(r3, r9, r3)
-    orr     r2, r2, r3                  @ r2<- r2 | r3
-    str     r2, [r1, #offArrayObject_taint]
+//    orr     r2, r2, r3                  @ r2<- r2 | r3
+//    str     r2, [r1, #offArrayObject_taint]
+	str		r3, [r1, #offArrayObject_taint]
+	str		r10, [r1, #offArrayObject_taint_index]	@ store the last index, add by haichen
     bx      lr
 
 /* continuation for OP_APUT_BYTE */
 
 .LOP_APUT_BYTE_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
+	mov		r10, r1						@ r10<- vCC (str vCC), add by haichen
     GET_VREG(r1, r2)                    @ r1<- vBB (array object)
-    ldr     r2, [r1, #offArrayObject_taint]
+//    ldr     r2, [r1, #offArrayObject_taint]
     SET_TAINT_FP(r3)
     GET_VREG_TAINT(r3, r9, r3)
-    orr     r2, r2, r3                  @ r2<- r2 | r3
-    str     r2, [r1, #offArrayObject_taint]
+//    orr     r2, r2, r3                  @ r2<- r2 | r3
+//    str     r2, [r1, #offArrayObject_taint]
+	str		r3, [r1, #offArrayObject_taint]
+	str		r10, [r1, #offArrayObject_taint_index]	@ store the last index, add by haichen
     bx      lr
 
 /* continuation for OP_APUT_CHAR */
 
 .LOP_APUT_CHAR_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
+	mov		r10, r1						@ r10<- vCC (str vCC), add by haichen
     GET_VREG(r1, r2)                    @ r1<- vBB (array object)
-    ldr     r2, [r1, #offArrayObject_taint]
+//    ldr     r2, [r1, #offArrayObject_taint]
     SET_TAINT_FP(r3)
     GET_VREG_TAINT(r3, r9, r3)
-    orr     r2, r2, r3                  @ r2<- r2 | r3
-    str     r2, [r1, #offArrayObject_taint]
+//    orr     r2, r2, r3                  @ r2<- r2 | r3
+//    str     r2, [r1, #offArrayObject_taint]
+	str		r3, [r1, #offArrayObject_taint]
+	str		r10, [r1, #offArrayObject_taint_index]	@ store the last index, add by haichen
     bx      lr
 
 /* continuation for OP_APUT_SHORT */
 
 .LOP_APUT_SHORT_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
+	mov		r10, r1						@ r10<- vCC (str vCC), add by haichen
     GET_VREG(r1, r2)                    @ r1<- vBB (array object)
-    ldr     r2, [r1, #offArrayObject_taint]
+//    ldr     r2, [r1, #offArrayObject_taint]
     SET_TAINT_FP(r3)
     GET_VREG_TAINT(r3, r9, r3)
-    orr     r2, r2, r3                  @ r2<- r2 | r3
-    str     r2, [r1, #offArrayObject_taint]
+//    orr     r2, r2, r3                  @ r2<- r2 | r3
+//    str     r2, [r1, #offArrayObject_taint]
+	str		r3, [r1, #offArrayObject_taint]
+	str		r10, [r1, #offArrayObject_taint_index]	@ store the last index, add by haichen
     bx      lr
 
 /* continuation for OP_IGET */

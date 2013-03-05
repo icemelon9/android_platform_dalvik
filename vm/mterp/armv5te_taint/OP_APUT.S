@@ -32,10 +32,13 @@
 
 .L${opcode}_taint_prop:
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
+	mov		r10, r1						@ r10<- vCC (str vCC), add by haichen
     GET_VREG(r1, r2)                    @ r1<- vBB (array object)
-    ldr     r2, [r1, #offArrayObject_taint]
+//    ldr     r2, [r1, #offArrayObject_taint]
     SET_TAINT_FP(r3)
     GET_VREG_TAINT(r3, r9, r3)
-    orr     r2, r2, r3                  @ r2<- r2 | r3
-    str     r2, [r1, #offArrayObject_taint]
+//    orr     r2, r2, r3                  @ r2<- r2 | r3
+//    str     r2, [r1, #offArrayObject_taint]
+	str		r3, [r1, #offArrayObject_taint]
+	str		r10, [r1, #offArrayObject_taint_index]	@ store the last index, add by haichen
     bx      lr

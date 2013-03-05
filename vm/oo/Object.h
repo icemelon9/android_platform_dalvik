@@ -280,6 +280,7 @@ struct ArrayObject : Object {
 
 #ifdef WITH_TAINT_TRACKING
     Taint           taint;
+	u4				index;		// record the index of last taint tag, add by haichen
 #endif
     /*
      * Array contents; actual size is (length * sizeof(type)).  This is

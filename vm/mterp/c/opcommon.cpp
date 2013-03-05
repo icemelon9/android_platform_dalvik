@@ -564,9 +564,13 @@ GOTO_TARGET_DECL(exceptionThrown);
         ((_type*)(void*)arrayObj->contents)[GET_REGISTER(vsrc2)] =          \
             GET_REGISTER##_regsize(vdst);                                   \
 /* ifdef WITH_TAINT_TRACKING */						    \
-	SET_ARRAY_TAINT(arrayObj,                                           \
+/*	SET_ARRAY_TAINT(arrayObj,                                           \
 		(GET_ARRAY_TAINT(arrayObj) |                                \
-		 GET_REGISTER_TAINT##_regsize(vdst)) );                     \
+		 GET_REGISTER_TAINT##_regsize(vdst)) );   */                \
+	SET_ARRAY_TAINT(arrayObj,										\
+		GET_REGISTER_TAINT##_regsize(vdst));						\
+/* add by haichen */												\
+	SET_ARRAY_TAINT_INDEX(arrayObj, vsrc2);							\
 /* endif */								    \
     }                                                                       \
     FINISH(2);

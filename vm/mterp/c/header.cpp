@@ -403,6 +403,10 @@ static inline void putDoubleToArrayTaint(u4* ptr, int idx, double dval)
 /* Object Taint interface */
 # define GET_ARRAY_TAINT(_arr)		      ((_arr)->taint.tag)
 # define SET_ARRAY_TAINT(_arr, _val)	      ((_arr)->taint.tag = (u4)(_val))
+/* add by haichen 
+ * set array taint index */
+# define GET_ARRAY_TAINT_INDEX(_arr)		((_arr)->index)
+# define SET_ARRAY_TAINT_INDEX(_arr, _val)	((_arr)->index = (u4)(_val))
 
 /* Return value taint (assumes rtaint variable is in scope */
 # define GET_RETURN_TAINT()		      (rtaint.tag)

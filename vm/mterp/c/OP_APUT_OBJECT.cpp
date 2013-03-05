@@ -34,9 +34,12 @@ HANDLE_OPCODE(OP_APUT_OBJECT /*vAA, vBB, vCC*/)
                                  GET_REGISTER(vsrc2),
                                  (Object *)GET_REGISTER(vdst));
 /* ifdef WITH_TAINT_TRACKING */
-	SET_ARRAY_TAINT(arrayObj,
+	/*SET_ARRAY_TAINT(arrayObj,
 		(GET_ARRAY_TAINT(arrayObj) |
-		 GET_REGISTER_TAINT(vdst)) );
+		 GET_REGISTER_TAINT(vdst)) );*/
+	SET_ARRAY_TAINT(arrayObj,
+		GET_REGISTER_TAINT(vdst) );
+	SET_ARRAY_TAINT_INDEX(arrayObj, vsrc2);
 /* endif */
     }
     FINISH(2);

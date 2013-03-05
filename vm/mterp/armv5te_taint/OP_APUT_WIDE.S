@@ -33,11 +33,12 @@
     FETCH_ADVANCE_INST(2)               @ advance rPC, load rINST
 // begin WITH_TAINT_TRACKING
 //    ldmia   r9, {r2-r3}                 @ r2/r3<- vAA/vAA+1
+	str		r1, [r10, #offArrayObject_taint_index]	@ store the last index, add by haichen
     ldr     r2, [r9, #0]
     ldr     r3, [r9, #8]
     ldr     r1, [r9, #4]                      @ r1<- array taint
-    ldr     r9, [r10, #offArrayObject_taint]
-    orr     r1, r1, r9                        @ r1<- r1 | r9
+//    ldr     r9, [r10, #offArrayObject_taint]
+//    orr     r1, r1, r9                        @ r1<- r1 | r9
     str     r1, [r10, #offArrayObject_taint]
 // end WITH_TAINT_TRACKING
     GET_INST_OPCODE(ip)                 @ extract opcode from rINST
