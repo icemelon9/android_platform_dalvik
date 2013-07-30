@@ -33,12 +33,10 @@ HANDLE_OPCODE(OP_APUT_OBJECT /*vAA, vBB, vCC*/)
         dvmSetObjectArrayElement(arrayObj,
                                  GET_REGISTER(vsrc2),
                                  (Object *)GET_REGISTER(vdst));
-/* ifdef WITH_TAINT_TRACKING */
-	/*SET_ARRAY_TAINT(arrayObj,
-		(GET_ARRAY_TAINT(arrayObj) |
-		 GET_REGISTER_TAINT(vdst)) );*/
+/* ifdef WITH_TAINT_TRACKING, modified by haichen */
 	SET_ARRAY_TAINT(arrayObj,
-		GET_REGISTER_TAINT(vdst) );
+		UNION_TAINT(GET_ARRAY_TAINT(arrayObj), 
+		 GET_REGISTER_TAINT(vdst)) );
 	SET_ARRAY_TAINT_INDEX(arrayObj, vsrc2);
 /* endif */
     }

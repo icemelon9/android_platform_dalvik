@@ -20,6 +20,7 @@
 #include "mterp/Mterp.h"
 #include <math.h>                   // needed for fmod, fmodf
 #include "mterp/common/FindInterface.h"
+#include "interp/Taint.h"	// add by haichen
 
 /*
  * Configuration defines.  These affect the C implementations, i.e. the
@@ -367,6 +368,7 @@ static inline void putDoubleToArrayTaint(u4* ptr, int idx, double dval)
 # define SET_REGISTER_DOUBLE(_idx, _val) \
     ( (_idx) < curMethod->registersSize-1 ? \
         (void)putDoubleToArray(fp, (_idx), (_val)) : assert(!"bad reg") )
+
 #else
 # define GET_REGISTER(_idx)                 (fp[(_idx)])
 # define SET_REGISTER(_idx, _val)           (fp[(_idx)] = (_val))
@@ -426,7 +428,42 @@ static inline void putDoubleToArrayTaint(u4* ptr, int idx, double dval)
 # define SET_ARRAY_TAINT(_field, _val)              ((void)0)
 # define GET_RETURN_TAINT()			    ((void)0)
 # define SET_RETURN_TAINT(_val)			    ((void)0)
+// add by haichen
+# define GET_ARRAY_TAINT_INDEX(_arr)		((void)0)
+# define SET_ARRAY_TAINT_INDEX(_arr, _val)	((void)0)
 #endif
+
+/* add by haichen */
+#ifdef WITH_TAINT_TRACKING
+# define GET_TAINT_SIGN(_val, _idx) \
+	( (_val) & TAINT_FIELD_SIGN##_idx )
+
+# define GET_TAINT_INDEX(_val, _idx) \
+	( (_val) & TAINT_FIELD_INDEX##_idx )
+
+# define GET_TAINT_FIELD(_val, _idx) \
+	( (_val) & TAINT_FIELD_MASK##_idx )
+
+# define MAX_TAINT_FIELD(_val1, _val2, _idx) \
+	( GET_TAINT_INDEX(_val1, _idx) < GET_TAINT_INDEX(_val2, _idx) ? \
+	  GET_TAINT_FIELD(_val2, _idx) : GET_TAINT_FIELD(_val1, _idx) )
+
+# define MIN_TAINT_FIELD(_val1, _val2, _idx) \
+	( GET_TAINT_INDEX(_val1, _idx) < GET_TAINT_INDEX(_val2, _idx) ? \
+	  GET_TAINT_FIELD(_val1, _idx) : GET_TAINT_FIELD(_val2, _idx) )
+
+# define SELECT_TAINT_FIELD(_val1, _val2, _idx) \
+	( GET_TAINT_INDEX(_val1, _idx) == 0 ? GET_TAINT_FIELD(_val2, _idx) : \
+	  (GET_TAINT_INDEX(_val2, _idx) == 0 ? GET_TAINT_FIELD(_val1, _idx) : \
+	   (GET_TAINT_SIGN(_val1, _idx) != GET_TAINT_SIGN(_val2, _idx) ? \
+		MAX_TAINT_FIELD(_val1, _val2, _idx) : MIN_TAINT_FIELD(_val1, _val2, _idx))) )
+
+# define UNION_TAINT(_val1, _val2) \
+	( SELECT_TAINT_FIELD(_val1, _val2, 1) | SELECT_TAINT_FIELD(_val1, _val2, 2) )
+#else
+# define UNION_TAINT_FIELD(_val1, _val2)	((void) 0)
+#endif
+
 
 /*
  * Get 16 bits from the specified offset of the program counter.  We always
